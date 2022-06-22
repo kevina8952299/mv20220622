@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MyProduct Main</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        
+    </head>
+    <body>
+        <H1>產品資料輸入</H1>      
+        <h2> 
+               產品編號:<input type="text" id="pid" name="pid" value="P001"/><br/>
+               產品名稱:<input type="text" id="pname" name="pname" value="iPhone 6"/><br/>
+               產品單價:<input type="text" id="price" name="price" value="20000"/><br/>
+               產品產地:<input type="text" id="place" name="place" value="美國"/><br/>
+               <input type="button" onclick="send()" value="上傳儲存"/>
+           <p>
+            搜尋: <input type="text" id="sname" name="sname" value="iPhone"/>
+            <input type="button"   onclick="search()"  value="搜尋"/>
+        </h2>      
+        <div id="display"></div>
+        <script>
+        function result(data){
+      	  $("#display").html(data);		
+        }
+        function search(){
+        	 $.ajax({					
+	 				type:"post",
+	 				url : "myproduct/searchProduct",
+	 				data:  {"sname": $("#sname").val()},
+	 				contentType:"application/x-www-form-urlencoded; charset=UTF-8",  // 要送到server的資料型態				
+	 				dataType:"html" ,   // 預期從server接收的資料型態				
+	 				success: result ,
+	 			    error : function (data, status, errormsg) {
+	 			        $("#display").html(errormsg);			        
+	 			    }
+	 			});         	
+        }
+        function send(){
+      	  var obj=new Object();
+      	  obj.pid=$("#pid").val();
+      	  obj.pname=$("#pname").val();
+      	  obj.place=$("#place").val();
+      	  obj.price=parseInt($("#price").val());
+      	  
+      	  var st=JSON.stringify(obj);
+      
+      	  $.ajax({					
+	 				type:"post",
+	 				url : "myproduct/addProduct",
+	 				data:  st,
+	 				contentType:"application/json",  // 要送到server的資料型態				
+	 				dataType:"html" ,   // 預期從server接收的資料型態				
+	 				success: result ,
+	 			    error : function (data, status, errormsg) {
+	 			        $("#display").html(errormsg);			        
+	 			    }
+	 			});         	
+        }
+        </script>
+    </body>
+</html>
